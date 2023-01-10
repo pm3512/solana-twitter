@@ -6,6 +6,7 @@ declare_id!("C31hQ3iWGT8btkTFSwKCSnjSqwzz9GStV3YEGq9fQQ4T");
 pub mod solana_twitter {
     use super::*;
 
+    #[allow(clippy::result_large_err)]
     pub fn send_tweet(
         ctx: Context<SendTweet>,
         topic: Option<String>,
@@ -48,8 +49,10 @@ pub struct Tweet {
     pub content: String,
 }
 
+// When changing, update messages in ErrorCode enum as well
 const MAX_TOPIC_LENGTH: usize = 50;
 const MAX_CONTENT_LENGTH: usize = 280;
+
 const DISCRIMINATOR_LENGTH: usize = 8;
 const TIMESTAMP_LENGTH: usize = 8;
 const PUBLIC_KEY_LENGTH: usize = 32;
@@ -67,8 +70,8 @@ impl Tweet {
 
 #[error_code]
 pub enum ErrorCode {
-    #[msg(format!("The provided topic should be {MAX_TOPIC_LENGTH} characters long maximum."))]
+    #[msg("The provided topic should be 50 characters long maximum.")]
     TopicTooLong,
-    #[msg(format!("The provided content should be {MAX_CONTENT_LENGTH} characters long maximum."))]
+    #[msg("The provided content should be 280 characters long maximum.")]
     ContentTooLong,
 }
