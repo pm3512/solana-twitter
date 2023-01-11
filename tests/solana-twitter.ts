@@ -2,7 +2,8 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { assert, expect } from "chai";
 import { SolanaTwitter } from "../target/types/solana_twitter";
-import { BlockheightBasedTransactionConfirmationStrategy } from "@solana/web3.js"
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+
 describe("solana-twitter", () => {
   const maxTopicLength = 50;
   const maxContentLength = 280;
@@ -129,5 +130,47 @@ describe("solana-twitter", () => {
     } catch (e) {
       expect(e.message).to.match(RegExp(errorMessageRegex));
     }
+  });
+
+  it("can fetch all tweets",async () => {
+    const tweets = await program.account.tweet.all()
+    expect(tweets.length).to.equal(3);
+  });
+
+  it("can fetch all tweets by author",async () => {
+    const author = program.provider.publicKey.toBase58();
+    const tweets = await program.account.tweet.all([{
+      memcmp: {
+        offset: 8, // discriminator
+        bytes: author
+      }
+    }])
+    // two entries from previous tests
+    expect(tweets.length).to.equal(2);
+
+    tweets.forEach((tweet) => {
+      expect(tweet.account.author.toBase58()).to.equal(author);
+    });
+  });
+
+  it("can fetch all tweets by topic",async () => {
+    const topic = 'TOPIC HERE';
+    const topicEncoded = bs58.encode(Buffer.from(topic));
+    const tweets = await program.account.tweet.all([{
+      memcmp: {
+        offset: 8 // discriminator
+                + 32 // author
+                + 8 // timestamp
+                + 1 // Some/None flag
+                + 4, // topic metadata
+        bytes: topicEncoded
+      }
+    }])
+    // two entries from previous tests
+    expect(tweets.length).to.equal(2);
+
+    tweets.forEach((tweet) => {
+      expect(tweet.account.topic).to.equal(topic);
+    });
   });
 });
