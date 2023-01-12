@@ -1,6 +1,11 @@
 import { useState } from "react";
+import Tweet from "../types/tweet";
+import formatTimestamp from "../utils/format_date";
 
-export default function TweetForm(props: { forceTopic?: string }) {
+export default function TweetForm(props: {
+  forceTopic?: string;
+  callback?: (arg0: Tweet) => void;
+}) {
   const contentCharLimit = 280;
   const topicCharLimit = 50;
   const [content, setContent] = useState("");
@@ -51,28 +56,29 @@ export default function TweetForm(props: { forceTopic?: string }) {
                   disabled={!changeableTopic}
                   onChange={(topic) => setTopic(topic.target.value)}
                 />
-              <div className="absolute left-0 inset-y-0 flex pl-3 pr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 m-auto ${
-                    topic ? "text-pink-500" : "text-gray-400"
-                  }`}
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.243 3.03a1 1 0 01.727 1.213L9.53 6h2.94l.56-2.243a1 1 0 111.94.486L14.53 6H17a1 1 0 110 2h-2.97l-1 4H15a1 1 0 110 2h-2.47l-.56 2.242a1 1 0 11-1.94-.485L10.47 14H7.53l-.56 2.242a1 1 0 11-1.94-.485L5.47 14H3a1 1 0 110-2h2.97l1-4H5a1 1 0 110-2h2.47l.56-2.243a1 1 0 011.213-.727zM9.03 8l-1 4h2.938l1-4H9.031z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
+                <div className="absolute left-0 inset-y-0 flex pl-3 pr-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`h-5 w-5 m-auto ${
+                      topic ? "text-pink-500" : "text-gray-400"
+                    }`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.243 3.03a1 1 0 01.727 1.213L9.53 6h2.94l.56-2.243a1 1 0 111.94.486L14.53 6H17a1 1 0 110 2h-2.97l-1 4H15a1 1 0 110 2h-2.47l-.56 2.242a1 1 0 11-1.94-.485L10.47 14H7.53l-.56 2.242a1 1 0 11-1.94-.485L5.47 14H3a1 1 0 110-2h2.97l1-4H5a1 1 0 110-2h2.47l.56-2.243a1 1 0 011.213-.727zM9.03 8l-1 4h2.938l1-4H9.031z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
               </div>
               <div className="flex pl-3">
                 <div
-                  className={`m-auto ${
-                    getCharLimitColor(topic.length, topicCharLimit) 
-                  }`}
+                  className={`m-auto ${getCharLimitColor(
+                    topic.length,
+                    topicCharLimit
+                  )}`}
                 >
                   {topic.length}/50
                 </div>
@@ -92,6 +98,21 @@ export default function TweetForm(props: { forceTopic?: string }) {
                   canTweet() ? "bg-pink-500" : "bg-pink-300 cursor-not-allowed"
                 }`}
                 disabled={!canTweet()}
+                onClick={() => {
+                  const timestamp = Date.now();
+                  const tweet: Tweet = {
+                    author_display: "author1", // TODO
+                    topic: topic ?? undefined,
+                    content: content,
+                    created_ago: "just now",
+                    created_at: formatTimestamp(timestamp),
+                    timestamp: timestamp,
+                  };
+                  if (props.callback) {
+                    props.callback(tweet);
+                  }
+                  // TODO: submit the tweet
+                }}
               >
                 Tweet
               </button>
