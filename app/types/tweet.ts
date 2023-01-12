@@ -1,5 +1,8 @@
 export default interface Tweet {
-    author: string,
+    author_display: string,
     topic?: string,
-    content: string
+    content: string,
+    created_ago: string,
+    created_at: string,
+    timestamp: number
 }
