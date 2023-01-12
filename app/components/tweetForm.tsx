@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Tweet from "../types/tweet";
-import formatTimestamp from "../utils/format_date";
+import { formatTimestamp } from "../utils/datetime";
 
 export default function TweetForm(props: {
   forceTopic?: string;
@@ -104,7 +104,6 @@ export default function TweetForm(props: {
                     author_display: "author1", // TODO
                     topic: topic ?? undefined,
                     content: content,
-                    created_ago: "just now",
                     created_at: formatTimestamp(timestamp),
                     timestamp: timestamp,
                   };

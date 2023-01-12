@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Tweet from "../types/tweet";
+import { timeDifference } from "../utils/datetime";
 
 export default function TweetComponent(props: Tweet) {
   return (
@@ -15,7 +16,7 @@ export default function TweetComponent(props: Tweet) {
         <time className="text-gray-500 text-sm" title={props.created_at}>
           {/*TODO: Link to the tweet page.*/}
           <Link href={"/"} className="hover:underline">
-            {props.created_ago}
+            {timeDifference(Date.now(), props.timestamp)}
           </Link>
         </time>
       </div>

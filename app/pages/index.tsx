@@ -10,13 +10,11 @@ export default function Home() {
       author_display: 'author1',
       topic: 'topic1',
       content: 'content1',
-      created_ago: "2 minutes ago",
       created_at: "some time",
       timestamp: 0
     }, {
       author_display: 'author2',
       content: 'content2',
-      created_ago: "7 hours ago",
       created_at: "some time",
       timestamp: 7
     }

@@ -14,7 +14,6 @@ export default function Profile() {
         author_display: "author1",
         topic: "topic1",
         content: "content1",
-        created_ago: "2 minutes ago",
         created_at: "some time",
         timestamp: 0,
       },
