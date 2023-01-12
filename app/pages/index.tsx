@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import TweetComponent from '../components/tweet';
 import TweetForm from '../components/tweetForm';
+import TweetList from '../components/tweetList';
 import Tweet from '../types/tweet'
 
 export default function Home() {
@@ -21,10 +22,6 @@ export default function Home() {
     }
   ];
 
-  const tweetList = tweets.map((tweet, i) => {
-    return <TweetComponent {...tweet} key={i} />
-  });
-
   return (
     <>
       <Head>
@@ -34,11 +31,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <TweetForm />
-      <div className="w-full max-w-3xl lg:max-w-4xl mx-auto">
-        <ul className="">
-          {tweetList}
-        </ul>
-      </div>
+      <TweetList tweets={tweets}/>
     </>
   )
 }
